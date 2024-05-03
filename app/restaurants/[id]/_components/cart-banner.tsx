@@ -7,17 +7,17 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/app/_components/ui/sheet";
 import { CartContext } from "@/app/_context/cart";
 import { formatCurrency } from "@/app/_helpers/price";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 interface CartBannerProps {
   restaurantId: string;
 }
 
 const CartBanner = ({ restaurantId }: CartBannerProps) => {
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const { products, totalPrice, totalQuantity } = useContext(CartContext);
   const restaurantHasProductOnCart = products.some(
     (product) => product.restaurantId === restaurantId,
@@ -38,15 +38,13 @@ const CartBanner = ({ restaurantId }: CartBannerProps) => {
             </span>
           </h3>
         </div>
-        <Sheet>
-          <SheetTrigger>
-            <Button>Ver Sacola</Button>
-          </SheetTrigger>
+        <Button onClick={() => setIsCartOpen(true)}>Ver Sacola</Button>
+        <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
           <SheetContent className="w-[90vw]">
             <SheetHeader>
               <SheetTitle>Sacola</SheetTitle>
             </SheetHeader>
-            <Cart />
+            <Cart setIsOpen={setIsCartOpen} />
           </SheetContent>
         </Sheet>
       </div>
