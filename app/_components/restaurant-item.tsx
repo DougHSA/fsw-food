@@ -10,6 +10,7 @@ import { cn } from "../_lib/utils";
 import { toggleFavoriteRestaurant } from "../_actions/restaurants";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface RestaurantItemProps {
   restaurant: Restaurant;
@@ -22,6 +23,7 @@ const RestaurantItem = ({
   className,
   favoritesRestaurants,
 }: RestaurantItemProps) => {
+  const router = useRouter();
   const { data } = useSession();
   const isFavorite = favoritesRestaurants?.some(
     (fav) => fav.restaurantId === restaurant.id,
@@ -30,11 +32,18 @@ const RestaurantItem = ({
     if (!data?.user.id) return;
     try {
       await toggleFavoriteRestaurant(data?.user.id, restaurant.id);
-      toast.success(
-        isFavorite
-          ? "Restaurante removido dos favoritos."
-          : "Você tem um novo restaurante favorito!",
-      );
+      if (isFavorite) {
+        toast.success("Restaurante removido dos favoritos.");
+      } else {
+        toast("Você tem um novo restaurante favorito!", {
+          description:
+            'Você pode visualiza-lo na tela de "Restaurantes Favoritos"',
+          action: {
+            label: "Restaurantes Favoritos",
+            onClick: () => router.push("/my-favorites-restaurants"),
+          },
+        });
+      }
     } catch (error) {
       toast.error("Erro ao favoritar restaurante.");
     }

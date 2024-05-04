@@ -26,11 +26,18 @@ const RestaurantImage = ({
     if (!userId) return;
     try {
       await toggleFavoriteRestaurant(userId, restaurant.id);
-      toast.success(
-        isFavorite
-          ? "Restaurante removido dos favoritos."
-          : "Você tem um novo restaurante favorito!",
-      );
+      if (isFavorite) {
+        toast.success("Restaurante removido dos favoritos.");
+      } else {
+        toast("Você tem um novo restaurante favorito!", {
+          description:
+            'Você pode visualiza-lo na tela de "Restaurantes Favoritos"',
+          action: {
+            label: "Restaurantes Favoritos",
+            onClick: () => router.push("/my-favorites-restaurants"),
+          },
+        });
+      }
     } catch (error) {
       toast.error("Erro ao favoritar restaurante.");
     }
