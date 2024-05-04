@@ -10,23 +10,25 @@ import RestaurantList from "./_components/restaurant-list";
 import Link from "next/link";
 
 const Home = async () => {
-  const restaurants = await db.restaurant.findMany({ take: 10 });
-  const categories = await db.category.findMany({});
-  const products = await db.product.findMany({
-    where: {
-      discountPercentage: {
-        gt: 0,
-      },
-    },
-    take: 10,
-    include: {
-      restaurant: {
-        select: {
-          name: true,
+  const [restaurants, categories, products] = await Promise.all([
+    db.restaurant.findMany({ take: 10 }),
+    db.category.findMany({}),
+    db.product.findMany({
+      where: {
+        discountPercentage: {
+          gt: 0,
         },
       },
-    },
-  });
+      take: 10,
+      include: {
+        restaurant: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    }),
+  ]);
   return (
     <>
       <Header />
@@ -40,10 +42,12 @@ const Home = async () => {
       </div>
 
       <div className="px-5 pt-6">
-        <PromoBanner
-          src="/banner-pizza.png"
-          alt="Até 30% de desconto em pizzas"
-        />
+        <Link href="/categories/73d58fa1-18d7-4137-97af-4c32d2b86f31/products">
+          <PromoBanner
+            src="/banner-pizza.png"
+            alt="Até 30% de desconto em pizzas"
+          />
+        </Link>
       </div>
 
       <div className="space-y-4 pt-6">
@@ -65,10 +69,12 @@ const Home = async () => {
       </div>
 
       <div className="px-5 pt-6">
-        <PromoBanner
-          src="/banner-lanches.png"
-          alt="A partir de R$17,90 em lanches"
-        />
+        <Link href="/categories/07824086-cc6f-4869-8bd1-5abcd30df99c/products">
+          <PromoBanner
+            src="/banner-lanches.png"
+            alt="A partir de R$17,90 em lanches"
+          />
+        </Link>
       </div>
 
       <div className="space-y-4 py-6">
