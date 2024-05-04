@@ -1,17 +1,14 @@
 "use client";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/app/_components/ui/avatar";
+import { Avatar, AvatarImage } from "@/app/_components/ui/avatar";
 import { Button } from "@/app/_components/ui/button";
 import { Card, CardContent } from "@/app/_components/ui/card";
 import { Separator } from "@/app/_components/ui/separator";
 import { CartContext } from "@/app/_context/cart";
 import { formatCurrency } from "@/app/_helpers/price";
 import { OrderStatus, Prisma } from "@prisma/client";
-import { ChevronRightIcon, Link } from "lucide-react";
+import { ChevronRightIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 
@@ -81,10 +78,6 @@ const OrderItem = ({ order }: OrderItemProps) => {
                 src={order.restaurant.imageUrl}
                 alt={order.restaurant.name}
               />
-              <AvatarFallback>
-                {order.restaurant.name[0].toUpperCase()}
-                {order.restaurant.name[1].toUpperCase()}
-              </AvatarFallback>
             </Avatar>
             <span className="text-sm font-semibold">
               {order.restaurant.name}
@@ -108,14 +101,14 @@ const OrderItem = ({ order }: OrderItemProps) => {
         <div className="space-y-2">
           {order.orderProducts.map((product) => (
             <div key={product.id} className="flex items-center gap-2">
-              <div className="flex h-5 w-5 items-center rounded-full bg-muted-foreground">
+              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground">
                 <span className="block text-xs text-white">
                   {product.quantity}
                 </span>
-                <span className="block text-xs text-muted-foreground">
-                  {product.product.name}
-                </span>
               </div>
+              <span className="block text-xs text-muted-foreground">
+                {product.product.name}
+              </span>
             </div>
           ))}
         </div>
