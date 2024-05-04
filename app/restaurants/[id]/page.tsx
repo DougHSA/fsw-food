@@ -4,6 +4,7 @@ import RestaurantImage from "./_components/restaurant-image";
 import RestaurantDetails from "./_components/restaurant-details";
 import CartBanner from "./_components/cart-banner";
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/_lib/auth-options";
 
 interface RestaurantPageProps {
   params: {
@@ -12,7 +13,7 @@ interface RestaurantPageProps {
 }
 
 const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   const restaurant = await db.restaurant.findUnique({
     where: {
       id,
@@ -38,12 +39,19 @@ const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
       },
     },
   });
+  const favoriteRestaurants = await db.userFavoriteRestaurant.findMany({
+    where: { userId: session?.user.id },
+  });
   if (!restaurant) {
     return notFound();
   }
   return (
     <div>
-      <RestaurantImage restaurant={restaurant} userId={session?.user.id} />
+      <RestaurantImage
+        restaurant={restaurant}
+        userId={session?.user.id}
+        favoritesRestaurants={favoriteRestaurants}
+      />
       <RestaurantDetails restaurant={restaurant} />
       <CartBanner restaurantId={restaurant.id} />
     </div>

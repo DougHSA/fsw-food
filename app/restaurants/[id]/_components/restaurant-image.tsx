@@ -2,16 +2,39 @@
 
 import Image from "next/image";
 import { Button } from "@/app/_components/ui/button";
-import { Restaurant } from "@prisma/client";
+import { Restaurant, UserFavoriteRestaurant } from "@prisma/client";
 import { ChevronLeftIcon, HeartIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { toggleFavoriteRestaurant } from "@/app/_actions/restaurants";
 
 interface RestaurantImageProps {
-  restaurant: Pick<Restaurant, "name" | "imageUrl">;
+  restaurant: Pick<Restaurant, "name" | "imageUrl" | "id">;
   userId?: string;
+  favoritesRestaurants?: UserFavoriteRestaurant[];
 }
 
-const RestaurantImage = ({ restaurant, userId }: RestaurantImageProps) => {
+const RestaurantImage = ({
+  restaurant,
+  userId,
+  favoritesRestaurants,
+}: RestaurantImageProps) => {
+  const isFavorite = favoritesRestaurants?.some(
+    (fav) => fav.restaurantId === restaurant.id,
+  );
+  const handleFavoriteClick = async () => {
+    if (!userId) return;
+    try {
+      await toggleFavoriteRestaurant(userId, restaurant.id);
+      toast.success(
+        isFavorite
+          ? "Restaurante removido dos favoritos."
+          : "Você tem um novo restaurante favorito!",
+      );
+    } catch (error) {
+      toast.error("Erro ao favoritar restaurante.");
+    }
+  };
   const router = useRouter();
   const handleBackClick = () => router.back();
   return (
@@ -32,9 +55,10 @@ const RestaurantImage = ({ restaurant, userId }: RestaurantImageProps) => {
       {userId && (
         <Button
           size="icon"
-          className="absolute right-4 top-4 rounded-full bg-gray-700"
+          className={`absolute right-2 top-2 h-7 w-7 rounded-full bg-gray-700 ${isFavorite && "bg-primary hover:bg-gray-700"}`}
+          onClick={handleFavoriteClick}
         >
-          <HeartIcon size={20} className="fill-white" />
+          <HeartIcon size={16} className="fill-white" />
         </Button>
       )}
     </div>
