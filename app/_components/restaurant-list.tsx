@@ -15,7 +15,6 @@ const RestaurantList = async ({ restaurants }: RestaurantListProps) => {
       userId: session?.user.id,
     },
   });
-  console.log(session);
   return (
     <div className="flex gap-4 overflow-x-scroll px-5 [&::-webkit-scrollbar]:hidden">
       {restaurants.map((restaurant) => (

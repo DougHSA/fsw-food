@@ -27,7 +27,6 @@ const Restaurants = ({ favoriteRestaurants }: RestaurantsProps) => {
   }, [searchFor]);
 
   if (!searchFor) return notFound();
-  console.log(favoriteRestaurants);
   return (
     <>
       <Header />

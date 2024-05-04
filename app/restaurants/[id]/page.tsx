@@ -52,7 +52,7 @@ const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
         userId={session?.user.id}
         favoritesRestaurants={favoriteRestaurants}
       />
-      <RestaurantDetails restaurant={restaurant} />
+      <RestaurantDetails restaurant={JSON.parse(JSON.stringify(restaurant))} />
       <CartBanner restaurantId={restaurant.id} />
     </div>
   );

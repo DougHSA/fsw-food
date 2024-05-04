@@ -11,5 +11,5 @@ export const searchForRestaurants = async (search: string) => {
       },
     },
   });
-  return restaurants;
+  return JSON.parse(JSON.stringify(restaurants));
 };
