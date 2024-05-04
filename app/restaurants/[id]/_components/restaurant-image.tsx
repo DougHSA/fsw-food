@@ -8,9 +8,10 @@ import { useRouter } from "next/navigation";
 
 interface RestaurantImageProps {
   restaurant: Pick<Restaurant, "name" | "imageUrl">;
+  userId?: string;
 }
 
-const RestaurantImage = ({ restaurant }: RestaurantImageProps) => {
+const RestaurantImage = ({ restaurant, userId }: RestaurantImageProps) => {
   const router = useRouter();
   const handleBackClick = () => router.back();
   return (
@@ -28,12 +29,14 @@ const RestaurantImage = ({ restaurant }: RestaurantImageProps) => {
       >
         <ChevronLeftIcon />
       </Button>
-      <Button
-        size="icon"
-        className="absolute right-4 top-4 rounded-full bg-gray-700"
-      >
-        <HeartIcon size={20} className="fill-white" />
-      </Button>
+      {userId && (
+        <Button
+          size="icon"
+          className="absolute right-4 top-4 rounded-full bg-gray-700"
+        >
+          <HeartIcon size={20} className="fill-white" />
+        </Button>
+      )}
     </div>
   );
 };

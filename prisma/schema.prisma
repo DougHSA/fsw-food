@@ -14,14 +14,15 @@ datasource db {
 }
 
 model Restaurant {
-  id                  String     @id @default(uuid())
+  id                  String                   @id @default(uuid())
   name                String
   imageUrl            String
-  deliveryFee         Decimal    @db.Decimal(10, 2)
+  deliveryFee         Decimal                  @db.Decimal(10, 2)
   deliveryTimeMinutes Int
   categories          Category[]
   products            Product[]
   orders              Order[]
+  userWhoFavorited    UserFavoriteRestaurant[]
 }
 
 model Category {
@@ -81,6 +82,16 @@ enum OrderStatus {
   CANCELED
 }
 
+model UserFavoriteRestaurant {
+  @@id([userId, restaurantId])
+  userId       String
+  user         User       @relation(fields: [userId], references: [id])
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  createdAt    DateTime   @default(now())
+
+}
+
 model User {
   id            String          @id @default(cuid())
   name          String?
@@ -92,7 +103,8 @@ model User {
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
-  orders Order[]
+  orders               Order[]
+  favoritesRestaurants UserFavoriteRestaurant[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

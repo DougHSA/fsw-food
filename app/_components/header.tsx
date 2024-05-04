@@ -98,7 +98,7 @@ const Header = () => {
                   className="w-full justify-start space-x-3 rounded-full text-sm font-normal"
                   asChild
                 >
-                  <Link href="/restaurants/recommended">
+                  <Link href="/my-favorites-restaurants">
                     <HeartIcon size={16} />
                     <span className="block">Restaurantes Favoritos</span>
                   </Link>

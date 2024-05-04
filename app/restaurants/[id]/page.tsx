@@ -3,6 +3,7 @@ import { db } from "../../_lib/prisma";
 import RestaurantImage from "./_components/restaurant-image";
 import RestaurantDetails from "./_components/restaurant-details";
 import CartBanner from "./_components/cart-banner";
+import { getServerSession } from "next-auth";
 
 interface RestaurantPageProps {
   params: {
@@ -11,6 +12,7 @@ interface RestaurantPageProps {
 }
 
 const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
+  const session = await getServerSession();
   const restaurant = await db.restaurant.findUnique({
     where: {
       id,
@@ -41,7 +43,7 @@ const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
   }
   return (
     <div>
-      <RestaurantImage restaurant={restaurant} />
+      <RestaurantImage restaurant={restaurant} userId={session?.user.id} />
       <RestaurantDetails restaurant={restaurant} />
       <CartBanner restaurantId={restaurant.id} />
     </div>

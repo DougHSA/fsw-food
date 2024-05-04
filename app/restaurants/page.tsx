@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Restaurants from "./_components/restaurants";
 
-const RestaurantsPage = () => {
+const RestaurantsPage = async () => {
   return (
     <Suspense>
       <Restaurants />
